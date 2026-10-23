@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Odliczanie do 31 marca 2028</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --text: #f4f7ff;
+      --muted: #aab5d1;
+      --accent: #83a8ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 24px; font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--text);
+      background: radial-gradient(ellipse at top, #1b2a50 0%, var(--bg) 62%);
+    }
+    main {
+      width: min(1800px, 100%); text-align: center; padding: clamp(8px, 2vw, 28px);
+      background: transparent; border: 0; box-shadow: none;
+    }
+    .countdowns {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(12px, 3vw, 48px); align-items: center;
+    }
+    .countdown { min-width: 0; padding: clamp(8px, 2vw, 24px) 0; }
+    .date {
+      color: var(--muted); font-size: clamp(.95rem, 2.2vw, 1.6rem);
+      margin-bottom: clamp(14px, 2.5vw, 32px);
+    }
+    .number {
+      display: block; font-variant-numeric: tabular-nums;
+      font-size: clamp(3.2rem, 10vw, 9rem); font-weight: 800;
+      letter-spacing: -.06em; line-height: 1;
+    }
+    .label { color: var(--accent); font-size: clamp(1.1rem, 2.5vw, 1.8rem); margin-top: 16px; }
+    #message { min-height: 1.5em; margin-top: 24px; color: var(--accent); }
+    @media (max-width: 700px) {
+      .countdowns { grid-template-columns: 1fr; gap: 6px; }
+      .countdown { padding: 10px 0; }
+      .date { margin-bottom: 8px; }
+      .number { font-size: clamp(3.5rem, 17vw, 6rem); }
+      .label { margin-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="countdowns" aria-label="Trzy odliczania">
+      <article class="countdown">
+
+        <div class="number" id="days-september">—</div>
+
+      </article>
+      <article class="countdown">
+
+        <div class="number" id="days-february">—</div>
+
+      </article>
+      <article class="countdown">
+
+        <div class="number" id="days-july">—</div>
+
+      </article>
+    </section>
+    <div id="message" role="status" aria-live="polite"></div>
+  </main>
+  <script>
+    // Cele wyznaczono na północ po wskazanych datach, w lokalnej strefie czasowej urządzenia.
+    const targets = [
+      { id: 'days-september', time: new Date(2027, 8, 23, 0, 0, 0).getTime() },
+      { id: 'days-february', time: new Date(2028, 2, 1, 0, 0, 0).getTime() },
+      { id: 'days-july', time: new Date(2028, 7, 1, 0, 0, 0).getTime() }
+    ];
+
+    function updateCountdowns() {
+      const now = Date.now();
+      for (const target of targets) {
+        const remaining = target.time - now;
+        const days = Math.max(0, Math.ceil(remaining / 86400000));
+        document.getElementById(target.id).textContent =
+          days.toLocaleString('pl-PL');
+      }
+    }
+
+    updateCountdowns();
+    setInterval(updateCountdowns, 60 * 1000);
+  </script>
+</body>
+</html>
